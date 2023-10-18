@@ -1,0 +1,30 @@
+[project]
+name = "LU-book-store"
+version = "0.1.0"
+description = "1st homework for University of Latvia Python course - Book inventory system"
+authors = [{ name = "Kristofers Solo", email = "dev@kristofers.xyz" }]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+[tool.mypy]
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+no_implicit_reexport = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 160
+
+[tool.black]
+line-length = 160
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"
