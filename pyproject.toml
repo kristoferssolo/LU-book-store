@@ -1,11 +1,12 @@
 [project]
-name = "LU-book-store"
+name = "LU-bookstore"
 version = "0.1.0"
 description = "1st homework for University of Latvia Python course - Book inventory system"
 authors = [{ name = "Kristofers Solo", email = "dev@kristofers.xyz" }]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = { text = "MIT" }
+dependencies = ["loguru==0.7", "attrs==23.1.0"]
 
 [tool.mypy]
 check_untyped_defs = true
