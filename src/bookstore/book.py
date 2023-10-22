@@ -13,10 +13,14 @@ def _check_stock_value(instance, attribute, value):
         raise ValueError("Stock must be larger or equal to 0!")
 
 
+def _to_isbn(number: str):
+    return ISBN(number)
+
+
 @define
 class Book:
     title: str = field()
     author: str = field()  # TODO: add default author as "Unknown"
-    isbn: ISBN = field(on_setattr=setters.frozen, repr=lambda value: f"'{value}'")
+    isbn: ISBN = field(converter=_to_isbn, validator=validators.instance_of(ISBN), on_setattr=setters.frozen, repr=lambda value: f"'{value}'")
     price: float = field(converter=float, validator=[validators.instance_of(float), _check_price_value])
     stock: int = field(converter=int, validator=[validators.instance_of(int), _check_stock_value])

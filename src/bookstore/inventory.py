@@ -1,3 +1,4 @@
+import csv
 from pathlib import Path
 
 from .book import Book
@@ -5,14 +6,29 @@ from .isbn import ISBN
 
 
 class Inventory:
-    def __init__(self, books: list[Book]) -> None:
-        self.books: dict[ISBN, Book] = {book.isbn: book for book in books}
+    def __init__(self, books: list[Book] | None) -> None:
+        self.books: dict[ISBN, Book] = {book.isbn: book for book in books} if books else {}
 
     def read_from_file(self, path: Path) -> None:
         """Read `Inventory` from `path` csv file."""
+        with open(path, mode="r") as file:
+            reader = csv.reader(file)
+
+            next(reader, None)  # Skip header
+
+            for title, author, isbn, price, stock in reader:
+                book = Book(title, author, isbn, price, stock)
+                self.add(book)
 
     def save_to_file(self, path: Path) -> None:
         """Save `Inventory` to `path` csv file."""
+        with open(path, mode="w") as file:
+            writer = csv.writer(file)
+
+            writer.writerow(["Title", "Auther", "ISBN", "Price", "Stock"])
+
+            for book in self.books.values():
+                writer.writerow([book.title, book.author, book.isbn, book.price, book.stock])
 
     def add(self, book: Book) -> None:
         """Add `Book` to the `Inventory`. `Book`s ISBN must be unique."""
