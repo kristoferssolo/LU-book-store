@@ -29,14 +29,14 @@ class Inventory:
         """Close database connection."""
         self.conn.close()
 
-    def add(self, *books: Book) -> None:
+    def add(self, book: Book) -> None:
         """Add `Book` to the `Inventory`. `Book`s ISBN must be unique."""
-        for book in books:
-            try:
-                self.cursor.execute("INSERT INTO Book VALUES (?, ?, ?, ?, ?)", (book.isbn, book.title, book.author, book.price, book.stock))
-                self.conn.commit()
-            except sqlite3.InternalError:
-                print(f"A book with ISBN {book.isbn} already exists in the database.")
+        try:
+            self.cursor.execute("INSERT INTO Book VALUES (?, ?, ?, ?, ?)", (book.isbn, book.title, book.author, book.price, book.stock))
+            self.conn.commit()
+            print(f"Book with ISBN: {book.isbn} was saved")
+        except sqlite3.InternalError:
+            print(f"A book with ISBN {book.isbn} already exists in the database.")
 
     def delete(self, isbn: ISBN) -> Book | None:
         """Deletes `Book` from `Inventory` by `ISBN` and returns deleted `Book`"""
@@ -71,10 +71,8 @@ class Inventory:
             return None
         return [Book(*book) for book in books]
 
-    def list_all(self) -> list[Book] | None:
+    def list_all(self) -> list[Book | None]:
         """Returns `List` of all `Book`s."""
         self.cursor.execute("SELECT * FROM Book")
         books = self.cursor.fetchall()
-        if not books:
-            return None
         return [Book(*book) for book in books]
