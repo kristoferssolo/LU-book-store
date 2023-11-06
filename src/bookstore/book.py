@@ -29,5 +29,5 @@ class Book:
     def fields(cls) -> tuple[str, str, str, str, str]:
         return "ISBN", "Title", "Author", "Price", "Stock"
 
-    def field_values(self) -> tuple[ISBN, str, str, float, int]:
+    def values(self) -> tuple[ISBN, str, str, float, int]:
         return self.isbn, self.title, self.author, self.price, self.stock

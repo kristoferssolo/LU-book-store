@@ -1,2 +1,2 @@
 attrs>=23.1.0
-urwid>=2.2.3
+npyscreen>=4.10.5
