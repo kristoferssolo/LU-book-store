@@ -29,7 +29,7 @@ class Inventory:
         """Close database connection."""
         self.conn.close()
 
-    def add(self, *books: list[Book]) -> None:
+    def add(self, *books: Book) -> None:
         """Add `Book` to the `Inventory`. `Book`s ISBN must be unique."""
         for book in books:
             try:
