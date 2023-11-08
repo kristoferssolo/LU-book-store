@@ -12,7 +12,7 @@ class App(ctk.CTk):
         super(App, self).__init__(*args, **kwargs)
         self.inventory = inventory
 
-        self.geometry("600x400")
+        self.geometry("960x540")
         self.title("Bookstore")
         ctk.set_appearance_mode("system")
         self.resizable(width=True, height=True)
@@ -33,10 +33,15 @@ class App(ctk.CTk):
                 for col, value in enumerate(book):
                     entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
+                edit_button = ctk.CTkButton(self, text="Edit", command=self.edit_book, width=0.5 * self.WIDTH)
+                edit_button.grid(row=row, column=5, padx=self.PADX, pady=self.PADY)
+
+    def edit_book(self):
+        pass
 
     def display_search(self) -> None:
         search_entry = ctk.CTkEntry(self, width=2 * self.WIDTH)
-        search_entry.grid(row=0, column=5, padx=self.PADX, pady=self.PADY)
+        search_entry.grid(row=0, column=6, padx=self.PADX, pady=self.PADY)
 
         def search(event=None) -> None:
             value = search_entry.get()
@@ -62,7 +67,7 @@ class App(ctk.CTk):
 
     def display_add_button(self) -> None:
         add_book_button = ctk.CTkButton(self, text="Add Book", command=self.add_book, width=2 * self.WIDTH)
-        add_book_button.grid(row=2, column=5, padx=self.PADX, pady=self.PADY)
+        add_book_button.grid(row=2, column=6, padx=self.PADX, pady=self.PADY)
 
     def run(self) -> None:
         self.mainloop()
