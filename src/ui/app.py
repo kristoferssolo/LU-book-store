@@ -31,7 +31,9 @@ class App(ctk.CTk):
         for row, book in enumerate(self.data, start=1):
             if book:
                 for col, value in enumerate(book):
-                    entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
+                    entry = ctk.CTkEntry(self, width=self.WIDTH)
+                    entry.insert(ctk.END, value)
+                    entry.configure(state="readonly")
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
                 edit_button = ctk.CTkButton(self, text="Edit", command=lambda: self.edit_book(book), width=0.5 * self.WIDTH)
                 edit_button.grid(row=row, column=5, padx=self.PADX, pady=self.PADY)
