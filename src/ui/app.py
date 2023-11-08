@@ -25,13 +25,14 @@ class App(ctk.CTk):
     def populate_table(self) -> None:
         headers = Book.fields()
         for col, header in enumerate(headers):
-            label = ctk.CTkLabel(self, text=header)
+            label = ctk.CTkLabel(self, text=header, width=self.WIDTH)
             label.grid(row=0, column=col, padx=self.PADX, pady=self.PADY)
 
         for row, book in enumerate(self.data, start=1):
-            for col, value in enumerate(book):
-                entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
-                entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
+            if book:
+                for col, value in enumerate(book):
+                    entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
+                    entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
 
     def display_search(self) -> None:
         search_entry = ctk.CTkEntry(self, width=2 * self.WIDTH)
