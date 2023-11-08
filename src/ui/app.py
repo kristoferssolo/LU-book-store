@@ -18,11 +18,11 @@ class App(ctk.CTk):
         self.resizable(width=True, height=True)
         self.data = inventory.list_all()
 
-        self.display_table()
+        self.populate_table()
         self.display_search()
         self.display_add_button()
 
-    def display_table(self) -> None:
+    def populate_table(self) -> None:
         headers = Book.fields()
         for col, header in enumerate(headers):
             label = ctk.CTkLabel(self, text=header)
@@ -79,7 +79,7 @@ class App(ctk.CTk):
             self.data = data
         else:
             self.data = self.inventory.list_all()
-        self.display_table()
+        self.populate_table()
 
     def clear_table(self):
         for widget in self.grid_slaves():
