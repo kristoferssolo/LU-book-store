@@ -6,7 +6,12 @@ authors = [{ name = "Kristofers Solo", email = "dev@kristofers.xyz" }]
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
-dependencies = ["attrs==23.1.0", "customtkinter==5.2.1", "packaging==23.2"]
+dependencies = [
+    "attrs==23.1.0",
+    "customtkinter==5.2.1",
+    "loguru==0.7.2",
+    "packaging==23.2",
+]
 
 [tool.mypy]
 check_untyped_defs = true

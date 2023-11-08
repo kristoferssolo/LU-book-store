@@ -1,7 +1,6 @@
 from attrs import define, field, validators
 
 
-# TODO: create checksum method
 @define(frozen=True)
 class ISBN(str):
     number: str = field(converter=str, validator=validators.matches_re(r"^\d{10}$|^\d{13}$"))

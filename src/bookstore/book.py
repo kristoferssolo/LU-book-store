@@ -1,18 +1,22 @@
 from attrs import define, field, setters, validators
+from loguru import logger
 
 from .isbn import ISBN
 
 
+@logger.catch
 def _check_price_value(instance, attribute, value):
     if value < 0:
         raise ValueError("Price must be larger or equal to 0!")
 
 
+@logger.catch
 def _check_stock_value(instance, attribute, value):
     if value < 0:
         raise ValueError("Stock must be larger or equal to 0!")
 
 
+@logger.catch
 def _to_isbn(number: str):
     return ISBN(number)
 
@@ -26,12 +30,15 @@ class Book:
     stock: int = field(converter=int, validator=[validators.instance_of(int), _check_stock_value])
 
     @classmethod
+    @logger.catch
     def fields(cls) -> tuple[str, str, str, str, str]:
         return "ISBN", "Title", "Author", "Price", "Stock"
 
+    @logger.catch
     def values(self) -> tuple[ISBN, str, str, float, int]:
         return self.isbn, self.title, self.author, self.price, self.stock
 
+    @logger.catch
     def get(self, field: str, default: str = "") -> ISBN | str | float | int:
         match field:
             case "ISBN":
@@ -47,5 +54,6 @@ class Book:
             case _:
                 return default
 
+    @logger.catch
     def __iter__(self):
         yield from self.values()
