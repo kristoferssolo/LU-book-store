@@ -74,8 +74,14 @@ class App(ctk.CTk):
         submit_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
 
     def update(self, data=None) -> None:
+        self.clear_table()
         if data:
             self.data = data
         else:
             self.data = self.inventory.list_all()
         self.display_table()
+
+    def clear_table(self):
+        for widget in self.grid_slaves():
+            if isinstance(widget, ctk.CTkLabel):
+                widget.destroy()
