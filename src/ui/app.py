@@ -48,7 +48,7 @@ class App(ctk.CTk):
 
     def edit_book(self, book: Book):
         """Open a book editing menu."""
-        self.book_menu(title_text="Edit Book", button_text="Save", book=book)
+        self.book_menu(title_text="Edit Book", book=book)
 
     def display_search(self) -> None:
         """Display a search entry field in the main window."""
@@ -92,9 +92,9 @@ class App(ctk.CTk):
 
     def add_book(self) -> None:
         """Open a menu for adding a new book."""
-        self.book_menu(title_text="Add Book", button_text="Submit")
+        self.book_menu(title_text="Add Book")
 
-    def book_menu(self, /, *, title_text: str = "", button_text: str = "", book: Book = None):
+    def book_menu(self, /, *, title_text: str = "", book: Book = None):
         """Display a book editing/adding menu."""
         # Create a new popup window.
 
@@ -121,8 +121,8 @@ class App(ctk.CTk):
             entry.grid(row=index, column=1, padx=self.PADX, pady=self.PADY)
             entries.append(entry)
 
-        def submit() -> None:
-            """Submit the changes or addition made in the book menu."""
+        def save() -> None:
+            """Save the changes or addition made in the book menu."""
             values = [entry.get() for entry in entries]
             book = Book(*values)
             if edit:
@@ -142,7 +142,7 @@ class App(ctk.CTk):
             """Close the book menu."""
             popup.destroy()
 
-        self.button(popup, text=button_text, command=submit, width=2 * self.WIDTH, row=5, col=1)
+        self.button(popup, text="Save", command=save, width=2 * self.WIDTH, row=5, col=1)
         self.button(popup, text="Cancel", command=cancel, width=2 * self.WIDTH, row=6, col=1)
 
         if edit:
