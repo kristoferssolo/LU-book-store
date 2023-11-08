@@ -15,6 +15,7 @@ class App(ctk.CTk):
         self.data = inventory.list_all()
 
         self.display_table()
+        self.display_add_button()
 
     def display_table(self) -> None:
         headers = Book.fields()
@@ -28,8 +29,12 @@ class App(ctk.CTk):
                 entry = ctk.CTkLabel(self, width=widths[col], text=value)
                 entry.grid(row=row, column=col, padx=10, pady=5)
 
-        open_popup_button = ctk.CTkButton(self, text="Add Book", command=self.add_book)
-        open_popup_button.grid(row=0, column=5, padx=10, pady=5)
+    def display_add_button(self) -> None:
+        add_book_button = ctk.CTkButton(self, text="Add Book", command=self.add_book)
+        add_book_button.grid(row=0, column=5, padx=10, pady=5)
+
+    def search(self) -> None:
+        pass
 
     def run(self) -> None:
         self.mainloop()
