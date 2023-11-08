@@ -15,6 +15,7 @@ class App(ctk.CTk):
         self.geometry("960x540")
         self.title("Bookstore")
         ctk.set_appearance_mode("system")
+        ctk.set_default_color_theme("dark-blue")
         self.resizable(width=True, height=True)
         self.data = inventory.list_all()
 
@@ -39,8 +40,7 @@ class App(ctk.CTk):
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
 
                 # Add edit button for each book entry
-                edit_button = ctk.CTkButton(self, text="Edit", command=lambda book=book: self.edit_book(book), width=0.5 * self.WIDTH)
-                edit_button.grid(row=row, column=5, padx=self.PADX, pady=self.PADY)
+                self.button(self, text="Edit", command=lambda book=book: self.edit_book(book), width=0.5 * self.WIDTH, row=row, col=5)
 
     def edit_book(self, book: Book):
         """Open a book editing menu."""
@@ -142,11 +142,26 @@ class App(ctk.CTk):
         self.button(popup, text="Cancel", command=cancel, width=2 * self.WIDTH, row=6, col=1)
 
         if edit:
-            self.button(popup, text="Delete Book", command=delete, width=self.WIDTH, row=5, col=0)
+            self.button(popup, text="Delete Book", command=delete, width=self.WIDTH, row=5, col=0, fg_color="#9b0d0d", hover_color="#720101")
 
-    def button(self, root, /, *, text: str, command, width: int, row: int, col: int, padx: int = PADX, pady: int = PADY) -> None:
+    def button(
+        self,
+        root,
+        /,
+        *,
+        text: str,
+        command,
+        width: int | float,
+        row: int,
+        col: int,
+        padx: int = PADX,
+        pady: int = PADY,
+        text_color: str | None = None,
+        fg_color: str | None = None,
+        hover_color: str | None = None,
+    ) -> None:
         """Create a button in a `root` window."""
-        button = ctk.CTkButton(root, text=text, command=command, width=width)
+        button = ctk.CTkButton(root, text=text, command=command, width=width, text_color=text_color, fg_color=fg_color, hover_color=hover_color)
         button.grid(row=row, column=col, padx=padx, pady=pady)
 
     def update(self, data=None) -> None:
