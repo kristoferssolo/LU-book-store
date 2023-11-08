@@ -69,7 +69,7 @@ class Inventory:
 
     def find_by_title(self, title: str) -> list[Book] | None:
         """Looks up `Book`s within `Inventory` by book title and returns them as a `List`. Returns `None` if none were found"""
-        self.cursor.execute("SELECT * FROM Book WHERE title LIKE '%?%'", (title,))
+        self.cursor.execute("SELECT * FROM Book WHERE title LIKE ?", (f"%{title}%",))
         books = self.cursor.fetchall()
         if not books:
             return None
@@ -77,7 +77,7 @@ class Inventory:
 
     def find_by_author(self, author: str) -> list[Book] | None:
         """Looks up `Book`s within `Inventory` by book author and returns them as a `List`. Returns `None` if none were found"""
-        self.cursor.execute("SELECT * FROM Book WHERE author LIKE '%?%'", (author,))
+        self.cursor.execute("SELECT * FROM Book WHERE author LIKE ?", (f"%{author}%",))
         books = self.cursor.fetchall()
         if not books:
             return None
