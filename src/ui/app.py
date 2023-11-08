@@ -40,8 +40,23 @@ class App(ctk.CTk):
 
         def search(event=None) -> None:
             value = search_entry.get()
-            data = self.inventory.find_by_isbn(value)
-            self.update([data])
+            if value == "":
+                self.update()
+            else:
+                data = []
+                isbn = self.inventory.find_by_isbn(value)
+                if isbn:
+                    data.append(isbn)
+
+                title = self.inventory.find_by_title(value)
+                if title:
+                    data += title
+
+                author = self.inventory.find_by_author(value)
+                if author:
+                    data += author
+
+                self.update(data)
 
         search_entry.bind("<Return>", command=search)
 
