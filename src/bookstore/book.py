@@ -18,14 +18,14 @@ def _check_stock_value(instance, attribute, value):
 
 @logger.catch
 def _to_isbn(number: str):
-    return ISBN(number)
+    return ISBN(number.strip())
 
 
 @define
 class Book:
     isbn: ISBN = field(converter=_to_isbn, validator=validators.instance_of(ISBN), on_setattr=setters.frozen, repr=lambda value: f"'{value}'")
-    title: str = field()
-    author: str = field()
+    title: str = field(converter=str.strip)
+    author: str = field(converter=str.strip)
     price: float = field(converter=float, validator=[validators.instance_of(float), _check_price_value])
     stock: int = field(converter=int, validator=[validators.instance_of(int), _check_stock_value])
 
