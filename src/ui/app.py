@@ -4,7 +4,7 @@ from bookstore.inventory import Inventory
 
 
 class App(ctk.CTk):
-    WIDTH = 100
+    WIDTH = 110
     PADX = 10
     PADY = 5
 
@@ -23,6 +23,7 @@ class App(ctk.CTk):
         self.display_add_button()
 
     def populate_table(self) -> None:
+        """Populate the table in the main window with book data."""
         headers = Book.fields()
         for col, header in enumerate(headers):
             label = ctk.CTkLabel(self, text=header, width=self.WIDTH)
@@ -35,17 +36,20 @@ class App(ctk.CTk):
                     entry.insert(ctk.END, value)
                     entry.configure(state="readonly")
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
-                edit_button = ctk.CTkButton(self, text="Edit", command=lambda: self.edit_book(book), width=0.5 * self.WIDTH)
+                edit_button = ctk.CTkButton(self, text="Edit", command=lambda book=book: self.edit_book(book), width=0.5 * self.WIDTH)
                 edit_button.grid(row=row, column=5, padx=self.PADX, pady=self.PADY)
 
     def edit_book(self, book: Book):
+        """Open a book editing menu."""
         self.book_menu(title_text="Edit Book", button_text="Save", book=book)
 
     def display_search(self) -> None:
+        """Display a search entry field in the main window."""
         search_entry = ctk.CTkEntry(self, width=2 * self.WIDTH)
         search_entry.grid(row=0, column=6, padx=self.PADX, pady=self.PADY)
 
         def search(event=None) -> None:
+            """Search for b books when <Enter> key ir pressed in the search entry field."""
             value = search_entry.get()
             if value == "":
                 self.update()
@@ -68,16 +72,19 @@ class App(ctk.CTk):
         search_entry.bind("<Return>", command=search)
 
     def display_add_button(self) -> None:
-        add_book_button = ctk.CTkButton(self, text="Add Book", command=self.add_book, width=2 * self.WIDTH)
-        add_book_button.grid(row=2, column=6, padx=self.PADX, pady=self.PADY)
+        """Display a button for adding a new book in the main window."""
+        self.button(self, text="Add Book", command=self.add_book, width=2 * self.WIDTH, row=2, col=6)
 
     def run(self) -> None:
+        """Run the main loop."""
         self.mainloop()
 
     def add_book(self) -> None:
+        """Open a menu for adding a new book."""
         self.book_menu(title_text="Add Book", button_text="Submit")
 
     def book_menu(self, /, *, title_text: str = "", button_text: str = "", book: Book = None):
+        """Display a book editing/adding menu."""
         popup = ctk.CTkToplevel(self)
         popup.title(title_text)
         edit = True if book else False
@@ -96,6 +103,7 @@ class App(ctk.CTk):
             entries.append(entry)
 
         def submit() -> None:
+            """Submit the changes or addition made in the book menu."""
             values = [entry.get() for entry in entries]
             book = Book(*values)
             if edit:
@@ -106,18 +114,28 @@ class App(ctk.CTk):
             self.update()
 
         def delete() -> None:
+            """Delete the book from the inventory."""
             self.inventory.delete(book.isbn)
             popup.destroy()
             self.update()
 
-        submit_button = ctk.CTkButton(popup, text=button_text, command=submit, width=2 * self.WIDTH)
-        submit_button.grid(row=5, column=1, padx=self.PADX, pady=self.PADY)
+        def cancel() -> None:
+            """Close the book menu."""
+            popup.destroy()
+
+        self.button(popup, text=button_text, command=submit, width=2 * self.WIDTH, row=5, col=1)
+        self.button(popup, text="Cancel", command=cancel, width=2 * self.WIDTH, row=6, col=1)
 
         if edit:
-            delete_button = ctk.CTkButton(popup, text="Delete Book", command=delete, width=self.WIDTH)
-            delete_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
+            self.button(popup, text="Delete Book", command=delete, width=self.WIDTH, row=5, col=0)
+
+    def button(self, root, /, *, text: str, command, width: int, row: int, col: int, padx: int = PADX, pady: int = PADY) -> None:
+        """Create a button in a `root` window."""
+        button = ctk.CTkButton(root, text=text, command=command, width=width)
+        button.grid(row=row, column=col, padx=padx, pady=pady)
 
     def update(self, data=None) -> None:
+        """Update the table with new data or reset it."""
         self.clear_table()
         if data:
             self.data = data
@@ -125,7 +143,8 @@ class App(ctk.CTk):
             self.data = self.inventory.list_all()
         self.populate_table()
 
-    def clear_table(self):
+    def clear_table(self) -> None:
+        """Cleat the table in the main window."""
         for widget in self.grid_slaves():
             if isinstance(widget, ctk.CTkLabel):
                 widget.destroy()
