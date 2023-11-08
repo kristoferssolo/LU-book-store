@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from bookstore.book import Book
 from bookstore.inventory import Inventory
+from loguru import logger
 
 
 class App(ctk.CTk):
@@ -8,11 +9,12 @@ class App(ctk.CTk):
     PADX = 10
     PADY = 5
 
+    @logger.catch
     def __init__(self, inventory: Inventory, *args, **kwargs) -> None:
         super(App, self).__init__(*args, **kwargs)
         self.inventory = inventory
 
-        self.geometry("960x540")
+        self.geometry("1280x540")
         self.title("Bookstore")
         ctk.set_appearance_mode("system")
         ctk.set_default_color_theme("dark-blue")
@@ -21,12 +23,14 @@ class App(ctk.CTk):
 
         self.display()
 
+    @logger.catch
     def display(self) -> None:
         """Display the main application interface."""
         self.populate_table()
         self.display_search()
         self.display_add_button()
 
+    @logger.catch
     def populate_table(self) -> None:
         """Populate the table in the main window with book data."""
         headers = Book.fields()
@@ -48,15 +52,18 @@ class App(ctk.CTk):
                 # Add edit button for each book entry
                 self.button(self, text="Edit", command=lambda book=book: self.edit_book(book), width=0.5 * self.WIDTH, row=row, col=5)
 
+    @logger.catch
     def edit_book(self, book: Book):
         """Open a book editing menu."""
         self.book_menu(title_text="Edit Book", book=book)
 
+    @logger.catch
     def display_search(self) -> None:
         """Display a search entry field in the main window."""
         search_entry = ctk.CTkEntry(self, width=2 * self.WIDTH)
         search_entry.grid(row=0, column=6, padx=self.PADX, pady=self.PADY)
 
+        @logger.catch
         def search(event=None) -> None:
             """Search for b books when <Enter> key ir pressed in the search entry field."""
             value = search_entry.get()
@@ -64,6 +71,7 @@ class App(ctk.CTk):
                 self.refresh()
             else:
                 data = []
+                logger.info(f"Searching: {value}")
                 # Search for books with matching ISBN in the inventory.
                 isbn = self.inventory.find_by_isbn(value)
                 if isbn:
@@ -84,18 +92,22 @@ class App(ctk.CTk):
         # Bind the search function to the <Enter> key press
         search_entry.bind("<Return>", command=search)
 
+    @logger.catch
     def display_add_button(self) -> None:
         """Display a button for adding a new book in the main window."""
         self.button(self, text="Add Book", command=self.add_book, width=2 * self.WIDTH, row=2, col=6)
 
+    @logger.catch
     def run(self) -> None:
         """Run the main loop."""
         self.mainloop()
 
+    @logger.catch
     def add_book(self) -> None:
         """Open a menu for adding a new book."""
         self.book_menu(title_text="Add Book")
 
+    @logger.catch
     def book_menu(self, /, *, title_text: str = "", book: Book = None):
         """Display a book editing/adding menu."""
         # Create a new popup window.
@@ -123,6 +135,7 @@ class App(ctk.CTk):
             entry.grid(row=index, column=1, padx=self.PADX, pady=self.PADY)
             entries.append(entry)
 
+        @logger.catch
         def save() -> None:
             """Save the changes or addition made in the book menu."""
             values = [entry.get() for entry in entries]
@@ -134,12 +147,14 @@ class App(ctk.CTk):
             popup.destroy()
             self.refresh()
 
+        @logger.catch
         def delete() -> None:
             """Delete the book from the inventory."""
             self.inventory.delete(book.isbn)
             popup.destroy()
             self.refresh()
 
+        @logger.catch
         def cancel() -> None:
             """Close the book menu."""
             popup.destroy()
@@ -148,8 +163,18 @@ class App(ctk.CTk):
         self.button(popup, text="Cancel", command=cancel, width=2 * self.WIDTH, row=6, col=1)
 
         if edit:
-            self.button(popup, text="Delete Book", command=delete, width=self.WIDTH, row=5, col=0, fg_color="#9b0d0d", hover_color="#720101")
+            self.button(
+                popup,
+                text="Delete Book",
+                command=delete,
+                width=self.WIDTH,
+                row=5,
+                col=0,
+                fg_color="#9b0d0d",
+                hover_color="#720101",
+            )
 
+    @logger.catch
     def button(
         self,
         root,
@@ -170,12 +195,14 @@ class App(ctk.CTk):
         button = ctk.CTkButton(root, text=text, command=command, width=width, text_color=text_color, fg_color=fg_color, hover_color=hover_color)
         button.grid(row=row, column=col, padx=padx, pady=pady)
 
+    @logger.catch
     def refresh(self, data=None) -> None:
         """Update the table with new data or reset it."""
         self.clear_table()
         self.data = data if data else self.inventory.list_all()
         self.display()
 
+    @logger.catch
     def clear_table(self) -> None:
         """Clear the table in the main window."""
         for widget in self.grid_slaves():
