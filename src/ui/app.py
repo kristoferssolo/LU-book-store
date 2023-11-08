@@ -35,10 +35,12 @@ class App(ctk.CTk):
             label = ctk.CTkLabel(self, text=header, width=self.WIDTH)
             label.grid(row=0, column=col, padx=self.PADX, pady=self.PADY)
 
+        widths = (110, 250, 150, 50, 50)
+
         for row, book in enumerate(self.data, start=1):  # Iterate through list of books
             if book:
                 for col, value in enumerate(book):  # Iterate through book data
-                    entry = ctk.CTkEntry(self, width=self.WIDTH)
+                    entry = ctk.CTkEntry(self, width=widths[col])
                     entry.insert(ctk.END, value)
                     entry.configure(state="readonly")
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
