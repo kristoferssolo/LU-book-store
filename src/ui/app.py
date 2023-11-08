@@ -4,6 +4,10 @@ from bookstore.inventory import Inventory
 
 
 class App(ctk.CTk):
+    WIDTH = 100
+    PADX = 10
+    PADY = 5
+
     def __init__(self, inventory: Inventory, *args, **kwargs) -> None:
         super(App, self).__init__(*args, **kwargs)
         self.inventory = inventory
@@ -21,17 +25,16 @@ class App(ctk.CTk):
         headers = Book.fields()
         for col, header in enumerate(headers):
             label = ctk.CTkLabel(self, text=header)
-            label.grid(row=0, column=col, padx=10, pady=5)
+            label.grid(row=0, column=col, padx=self.PADX, pady=self.PADY)
 
-        widths = [100, 100, 100, 100, 100]
         for row, book in enumerate(self.data, start=1):
             for col, value in enumerate(book):
-                entry = ctk.CTkLabel(self, width=widths[col], text=value)
-                entry.grid(row=row, column=col, padx=10, pady=5)
+                entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
+                entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
 
     def display_add_button(self) -> None:
         add_book_button = ctk.CTkButton(self, text="Add Book", command=self.add_book)
-        add_book_button.grid(row=0, column=5, padx=10, pady=5)
+        add_book_button.grid(row=0, column=5, padx=self.PADX, pady=self.PADY)
 
     def search(self) -> None:
         pass
@@ -46,12 +49,9 @@ class App(ctk.CTk):
         entries = []
         for index, value in enumerate(Book.fields()):
             title = ctk.CTkLabel(popup, text=value)
-            title.grid(row=index, column=0, padx=10, pady=5)
-            entry = ctk.CTkEntry(
-                popup,
-                width=200,
-            )
-            entry.grid(row=index, column=1, padx=10, pady=5)
+            title.grid(row=index, column=0, padx=self.PADX, pady=self.PADY)
+            entry = ctk.CTkEntry(popup, width=2 * self.WIDTH)
+            entry.grid(row=index, column=1, padx=self.PADX, pady=self.PADY)
             entries.append(entry)
 
         def submit():
@@ -62,7 +62,7 @@ class App(ctk.CTk):
             self.update()
 
         submit_button = ctk.CTkButton(popup, text="Submit", command=submit)
-        submit_button.grid(row=5, column=0, padx=10, pady=5)
+        submit_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
 
     def update(self):
         self.data = self.inventory.list_all()
