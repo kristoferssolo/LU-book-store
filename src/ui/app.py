@@ -33,11 +33,11 @@ class App(ctk.CTk):
                 for col, value in enumerate(book):
                     entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
-                edit_button = ctk.CTkButton(self, text="Edit", command=self.edit_book, width=0.5 * self.WIDTH)
+                edit_button = ctk.CTkButton(self, text="Edit", command=lambda: self.edit_book(book), width=0.5 * self.WIDTH)
                 edit_button.grid(row=row, column=5, padx=self.PADX, pady=self.PADY)
 
-    def edit_book(self):
-        pass
+    def edit_book(self, book: Book):
+        self.book_menu(title_text="Edit Book", button_text="Save", book=book)
 
     def display_search(self) -> None:
         search_entry = ctk.CTkEntry(self, width=2 * self.WIDTH)
@@ -73,25 +73,37 @@ class App(ctk.CTk):
         self.mainloop()
 
     def add_book(self) -> None:
-        popup = ctk.CTkToplevel(self)
-        popup.title("Add Book")
+        self.book_menu(title_text="Add Book", button_text="Submit")
 
-        entries = []
-        for index, value in enumerate(Book.fields()):
-            title = ctk.CTkLabel(popup, text=value)
+    def book_menu(self, /, *, title_text: str = "", button_text: str = "", book: Book = None):
+        popup = ctk.CTkToplevel(self)
+        popup.title(title_text)
+        edit = True if book else False
+
+        entries: list[ctk.CTkEntry] = []
+
+        for index, field in enumerate(Book.fields()):
+            title = ctk.CTkLabel(popup, text=field)
             title.grid(row=index, column=0, padx=self.PADX, pady=self.PADY)
             entry = ctk.CTkEntry(popup, width=2 * self.WIDTH)
+            value = book.get(field, "") if book else ""
+            entry.insert(ctk.END, str(value))
+            if field == "ISBN" and edit:
+                entry.configure(state="readonly")
             entry.grid(row=index, column=1, padx=self.PADX, pady=self.PADY)
             entries.append(entry)
 
         def submit():
             values = [entry.get() for entry in entries]
             book = Book(*values)
-            self.inventory.add(book)
+            if edit:
+                self.inventory.edit(book)
+            else:
+                self.inventory.add(book)
             popup.destroy()
             self.update()
 
-        submit_button = ctk.CTkButton(popup, text="Submit", command=submit)
+        submit_button = ctk.CTkButton(popup, text=button_text, command=submit)
         submit_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
 
     def update(self, data=None) -> None:
