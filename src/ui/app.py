@@ -28,7 +28,32 @@ class App(ctk.CTk):
                 entry = ctk.CTkLabel(self, width=widths[col], text=value)
                 entry.grid(row=row, column=col, padx=10, pady=5)
 
+        open_popup_button = ctk.CTkButton(self, text="Add Book", command=self.add_book)
+        open_popup_button.grid(row=0, column=5, padx=10, pady=5)
 
     def run(self) -> None:
         self.mainloop()
 
+    def add_book(self) -> None:
+        popup = ctk.CTkToplevel(self)
+        popup.title("Add Book")
+
+        entries = []
+        for index, value in enumerate(Book.fields()):
+            title = ctk.CTkLabel(popup, text=value)
+            title.grid(row=index, column=0, padx=10, pady=5)
+            entry = ctk.CTkEntry(
+                popup,
+                width=200,
+            )
+            entry.grid(row=index, column=1, padx=10, pady=5)
+            entries.append(entry)
+
+        def submit():
+            values = [entry.get() for entry in entries]
+            book = Book(*values)
+            self.inventory.add(book)
+            popup.destroy()
+
+        submit_button = ctk.CTkButton(popup, text="Submit", command=submit)
+        submit_button.grid(row=5, column=0, padx=10, pady=5)
