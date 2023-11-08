@@ -32,5 +32,20 @@ class Book:
     def values(self) -> tuple[ISBN, str, str, float, int]:
         return self.isbn, self.title, self.author, self.price, self.stock
 
+    def get(self, field: str, default: str = "") -> ISBN | str | float | int:
+        match field:
+            case "ISBN":
+                return self.isbn
+            case "Title":
+                return self.title
+            case "Author":
+                return self.author
+            case "Price":
+                return self.price
+            case "Stock":
+                return self.stock
+            case _:
+                return default
+
     def __iter__(self):
         yield from self.values()
