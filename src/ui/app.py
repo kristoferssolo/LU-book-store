@@ -64,6 +64,9 @@ class App(ctk.CTk):
         submit_button = ctk.CTkButton(popup, text="Submit", command=submit)
         submit_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
 
-    def update(self):
-        self.data = self.inventory.list_all()
+    def update(self, data=None) -> None:
+        if data:
+            self.data = data
+        else:
+            self.data = self.inventory.list_all()
         self.display_table()
