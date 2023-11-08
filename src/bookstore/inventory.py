@@ -34,17 +34,28 @@ class Inventory:
         for book in books:
             try:
                 self.cursor.execute("INSERT INTO Book VALUES (?, ?, ?, ?, ?)", (book.isbn, book.title, book.author, book.price, book.stock))
-                self.conn.commit()
-                print(f"Book with ISBN: {book.isbn} was saved")
-            except sqlite3.InternalError:
-                print(f"A book with ISBN {book.isbn} already exists in the database.")
+                self.save()
+                print(f"Book with ISBN: {book.isbn} was successfully saved")
+            except sqlite3.InternalError as e:
+                print(f"A book with ISBN {book.isbn} already exists in the database.\n{e}")
+
+    def edit(self, book: Book) -> None:
+        """Edit `Book`."""
+        try:
+            self.cursor.execute(
+                "UPDATE Book SET title = ?, author = ?, price = ?, stock = ? WHERE isbn = ?", (book.title, book.author, book.price, book.stock, book.isbn)
+            )
+            self.save()
+            print(f"Book with ISBN: {book.isbn} was successfully updated!")
+        except sqlite3.InternalError as e:
+            print(f"Something went wrong.\n{e}")
 
     def delete(self, isbn: ISBN) -> Book | None:
         """Deletes `Book` from `Inventory` by `ISBN` and returns deleted `Book`"""
         deleted_book = self.find_by_isbn(isbn)
 
         self.cursor.execute("DELETE FROM Book WHERE isbn = ?", (isbn,))
-        self.conn.commit()
+        self.save()
 
         return deleted_book
 
