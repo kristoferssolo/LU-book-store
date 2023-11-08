@@ -54,6 +54,11 @@ class App(ctk.CTk):
             book = Book(*values)
             self.inventory.add(book)
             popup.destroy()
+            self.update()
 
         submit_button = ctk.CTkButton(popup, text="Submit", command=submit)
         submit_button.grid(row=5, column=0, padx=10, pady=5)
+
+    def update(self):
+        self.data = self.inventory.list_all()
+        self.display_table()
