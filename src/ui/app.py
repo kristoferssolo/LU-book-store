@@ -19,6 +19,7 @@ class App(ctk.CTk):
         self.data = inventory.list_all()
 
         self.display_table()
+        self.display_search()
         self.display_add_button()
 
     def display_table(self) -> None:
@@ -32,12 +33,20 @@ class App(ctk.CTk):
                 entry = ctk.CTkLabel(self, width=self.WIDTH, text=value)
                 entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
 
-    def display_add_button(self) -> None:
-        add_book_button = ctk.CTkButton(self, text="Add Book", command=self.add_book)
-        add_book_button.grid(row=0, column=5, padx=self.PADX, pady=self.PADY)
+    def display_search(self) -> None:
+        search_entry = ctk.CTkEntry(self, width=2 * self.WIDTH)
+        search_entry.grid(row=0, column=5, padx=self.PADX, pady=self.PADY)
 
-    def search(self) -> None:
-        pass
+        def search(event=None) -> None:
+            value = search_entry.get()
+            data = self.inventory.find_by_isbn(value)
+            self.update([data])
+
+        search_entry.bind("<Return>", command=search)
+
+    def display_add_button(self) -> None:
+        add_book_button = ctk.CTkButton(self, text="Add Book", command=self.add_book, width=2 * self.WIDTH)
+        add_book_button.grid(row=2, column=5, padx=self.PADX, pady=self.PADY)
 
     def run(self) -> None:
         self.mainloop()
