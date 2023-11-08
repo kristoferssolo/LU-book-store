@@ -25,17 +25,20 @@ class App(ctk.CTk):
     def populate_table(self) -> None:
         """Populate the table in the main window with book data."""
         headers = Book.fields()
-        for col, header in enumerate(headers):
+
+        for col, header in enumerate(headers):  # Create header labels for each column
             label = ctk.CTkLabel(self, text=header, width=self.WIDTH)
             label.grid(row=0, column=col, padx=self.PADX, pady=self.PADY)
 
-        for row, book in enumerate(self.data, start=1):
+        for row, book in enumerate(self.data, start=1):  # Iterate through list of books
             if book:
-                for col, value in enumerate(book):
+                for col, value in enumerate(book):  # Iterate through book data
                     entry = ctk.CTkEntry(self, width=self.WIDTH)
                     entry.insert(ctk.END, value)
                     entry.configure(state="readonly")
                     entry.grid(row=row, column=col, padx=self.PADX, pady=self.PADY)
+
+                # Add edit button for each book entry
                 edit_button = ctk.CTkButton(self, text="Edit", command=lambda book=book: self.edit_book(book), width=0.5 * self.WIDTH)
                 edit_button.grid(row=row, column=5, padx=self.PADX, pady=self.PADY)
 
@@ -55,20 +58,24 @@ class App(ctk.CTk):
                 self.update()
             else:
                 data = []
+                # Search for books with matching ISBN in the inventory.
                 isbn = self.inventory.find_by_isbn(value)
                 if isbn:
                     data.append(isbn)
 
-                title = self.inventory.find_by_title(value)
-                if title:
-                    data += title
+                # Search for books with matching title in the inventory.
+                titles = self.inventory.find_by_title(value)
+                if titles:
+                    data += titles
 
-                author = self.inventory.find_by_author(value)
-                if author:
-                    data += author
+                # Search for books with matching author in the inventory.
+                authors = self.inventory.find_by_author(value)
+                if authors:
+                    data += authors
 
                 self.update(data)
 
+        # Bind the search function to the <Enter> key press
         search_entry.bind("<Return>", command=search)
 
     def display_add_button(self) -> None:
@@ -85,20 +92,28 @@ class App(ctk.CTk):
 
     def book_menu(self, /, *, title_text: str = "", button_text: str = "", book: Book = None):
         """Display a book editing/adding menu."""
+        # Create a new popup window.
+
         popup = ctk.CTkToplevel(self)
         popup.title(title_text)
+
         edit = True if book else False
 
         entries: list[ctk.CTkEntry] = []
 
-        for index, field in enumerate(Book.fields()):
+        for index, field in enumerate(Book.fields()):  # Iterate through book fields and create labels and entry fields for each
             title = ctk.CTkLabel(popup, text=field)
             title.grid(row=index, column=0, padx=self.PADX, pady=self.PADY)
             entry = ctk.CTkEntry(popup, width=2 * self.WIDTH)
+
+            # Set the default value in the entry field based on the book's data
             value = book.get(field, "") if book else ""
             entry.insert(ctk.END, str(value))
+
+            # If editing a book and the field is ISBN, set the entry field to read-only.
             if field == "ISBN" and edit:
                 entry.configure(state="readonly")
+
             entry.grid(row=index, column=1, padx=self.PADX, pady=self.PADY)
             entries.append(entry)
 
@@ -137,14 +152,11 @@ class App(ctk.CTk):
     def update(self, data=None) -> None:
         """Update the table with new data or reset it."""
         self.clear_table()
-        if data:
-            self.data = data
-        else:
-            self.data = self.inventory.list_all()
+        self.data = data if data else self.inventory.list_all()
         self.populate_table()
 
     def clear_table(self) -> None:
-        """Cleat the table in the main window."""
+        """Clear the table in the main window."""
         for widget in self.grid_slaves():
             if isinstance(widget, ctk.CTkLabel):
                 widget.destroy()
