@@ -56,6 +56,7 @@ class Inventory:
 
         self.cursor.execute("DELETE FROM Book WHERE isbn = ?", (isbn,))
         self.save()
+        print(f"Book with ISBN: {isbn} was successfully deleted!")
 
         return deleted_book
 

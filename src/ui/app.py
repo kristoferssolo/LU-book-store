@@ -95,7 +95,7 @@ class App(ctk.CTk):
             entry.grid(row=index, column=1, padx=self.PADX, pady=self.PADY)
             entries.append(entry)
 
-        def submit():
+        def submit() -> None:
             values = [entry.get() for entry in entries]
             book = Book(*values)
             if edit:
@@ -105,8 +105,17 @@ class App(ctk.CTk):
             popup.destroy()
             self.update()
 
-        submit_button = ctk.CTkButton(popup, text=button_text, command=submit)
-        submit_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
+        def delete() -> None:
+            self.inventory.delete(book.isbn)
+            popup.destroy()
+            self.update()
+
+        submit_button = ctk.CTkButton(popup, text=button_text, command=submit, width=2 * self.WIDTH)
+        submit_button.grid(row=5, column=1, padx=self.PADX, pady=self.PADY)
+
+        if edit:
+            delete_button = ctk.CTkButton(popup, text="Delete Book", command=delete, width=self.WIDTH)
+            delete_button.grid(row=5, column=0, padx=self.PADX, pady=self.PADY)
 
     def update(self, data=None) -> None:
         self.clear_table()
