@@ -31,3 +31,6 @@ class Book:
 
     def values(self) -> tuple[ISBN, str, str, float, int]:
         return self.isbn, self.title, self.author, self.price, self.stock
+
+    def __iter__(self):
+        yield from self.values()
