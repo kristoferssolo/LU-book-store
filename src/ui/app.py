@@ -86,7 +86,6 @@ class App(ctk.CTk):
                 authors = self.inventory.find_by_author(value)
                 if authors:
                     data += authors
-
                 self.refresh(data)
 
         # Bind the search function to the <Enter> key press
@@ -199,7 +198,8 @@ class App(ctk.CTk):
     def refresh(self, data=None) -> None:
         """Update the table with new data or reset it."""
         self.clear_table()
-        self.data = data if data else self.inventory.list_all()
+        self.data = data if data is not None else self.inventory.list_all()
+        logger.debug(self.data)
         self.display()
 
     @logger.catch
