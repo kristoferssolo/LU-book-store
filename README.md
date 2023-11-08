@@ -6,8 +6,9 @@ Develop a bookstore inventory management system in Python.
 Read more [here](TASK.md)
 
 ## Running
+
 ```shell
-pip install . -e
+pip install -e .
 ```
 
 ```shell
