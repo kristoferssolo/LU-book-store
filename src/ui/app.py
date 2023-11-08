@@ -19,6 +19,10 @@ class App(ctk.CTk):
         self.resizable(width=True, height=True)
         self.data = inventory.list_all()
 
+        self.display()
+
+    def display(self) -> None:
+        """Display the main application interface."""
         self.populate_table()
         self.display_search()
         self.display_add_button()
@@ -55,7 +59,7 @@ class App(ctk.CTk):
             """Search for b books when <Enter> key ir pressed in the search entry field."""
             value = search_entry.get()
             if value == "":
-                self.update()
+                self.refresh()
             else:
                 data = []
                 # Search for books with matching ISBN in the inventory.
@@ -73,7 +77,7 @@ class App(ctk.CTk):
                 if authors:
                     data += authors
 
-                self.update(data)
+                self.refresh(data)
 
         # Bind the search function to the <Enter> key press
         search_entry.bind("<Return>", command=search)
@@ -126,13 +130,13 @@ class App(ctk.CTk):
             else:
                 self.inventory.add(book)
             popup.destroy()
-            self.update()
+            self.refresh()
 
         def delete() -> None:
             """Delete the book from the inventory."""
             self.inventory.delete(book.isbn)
             popup.destroy()
-            self.update()
+            self.refresh()
 
         def cancel() -> None:
             """Close the book menu."""
@@ -164,14 +168,14 @@ class App(ctk.CTk):
         button = ctk.CTkButton(root, text=text, command=command, width=width, text_color=text_color, fg_color=fg_color, hover_color=hover_color)
         button.grid(row=row, column=col, padx=padx, pady=pady)
 
-    def update(self, data=None) -> None:
+    def refresh(self, data=None) -> None:
         """Update the table with new data or reset it."""
         self.clear_table()
         self.data = data if data else self.inventory.list_all()
-        self.populate_table()
+        self.display()
 
     def clear_table(self) -> None:
         """Clear the table in the main window."""
         for widget in self.grid_slaves():
-            if isinstance(widget, ctk.CTkLabel):
+            if isinstance(widget, ctk.CTkEntry) or isinstance(widget, ctk.CTkButton):
                 widget.destroy()
