@@ -80,7 +80,7 @@ class Inventory:
     @logger.catch
     def find_by_title(self, title: str) -> list[Book] | None:
         """Looks up `Book`s within `Inventory` by book title and returns them as a `List`. Returns `None` if none were found"""
-        self.cursor.execute("SELECT * FROM Book WHERE title LIKE ?", (f"%{title}%",))
+        self.cursor.execute("SELECT * FROM Book WHERE title LIKE ? ORDER BY title", (f"%{title}%",))
         books = self.cursor.fetchall()
         if not books:
             return None
@@ -89,7 +89,7 @@ class Inventory:
     @logger.catch
     def find_by_author(self, author: str) -> list[Book] | None:
         """Looks up `Book`s within `Inventory` by book author and returns them as a `List`. Returns `None` if none were found"""
-        self.cursor.execute("SELECT * FROM Book WHERE author LIKE ?", (f"%{author}%",))
+        self.cursor.execute("SELECT * FROM Book WHERE author LIKE ? ORDER BY author", (f"%{author}%",))
         books = self.cursor.fetchall()
         if not books:
             return None
@@ -98,6 +98,6 @@ class Inventory:
     @logger.catch
     def list_all(self) -> list[Book | None]:
         """Returns `List` of all `Book`s."""
-        self.cursor.execute("SELECT * FROM Book")
+        self.cursor.execute("SELECT * FROM Book ORDER BY title")
         books = self.cursor.fetchall()
         return [Book(*book) for book in books]
